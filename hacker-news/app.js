@@ -8,7 +8,11 @@ const ul = document.createElement("ul");
 
 newsFeed.map((item) => {
   const li = document.createElement("li");
-  li.innerHTML = item.title;
+  const a = document.createElement("a");
+
+  a.innerHTML = item.title;
+
+  li.appendChild(a);
   ul.appendChild(li);
 });
 
