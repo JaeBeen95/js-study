@@ -128,22 +128,31 @@ function getData(url) {
   ajax.send();
   return JSON.parse(ajax.response);
 }
-var newsFeed = getData(NEWS_URL);
-var ul = document.createElement("ul");
-window.addEventListener("hashchange", function () {
+function newsFeed() {
+  var newsFeed = getData(NEWS_URL);
+  var newsList = [];
+  newsList.push("<ul>");
+  newsFeed.slice(0, 10).map(function (item) {
+    newsList.push("\n      <li>\n        <a href=\"#".concat(item.id, "\">\n          ").concat(item.title, " (").concat(item.comments_count, ")\n        </a>\n      </li>\n    "));
+  });
+  newsList.push("</ul>");
+  container.innerHTML = newsList.join("");
+}
+function newsDetail() {
   var id = location.hash.substring(1);
   var newsContent = getData(CONTENT_URL.replace("@id", id));
-  var title = document.createElement("h1");
-  title.innerHTML = newsContent.title;
-  content.appendChild(title);
-});
-newsFeed.slice(0, 10).map(function (item) {
-  var div = document.createElement("div");
-  div.innerHTML = "\n    <li>\n      <a href=\"#".concat(item.id, "\">\n        ").concat(item.title, " (").concat(item.comments_count, ")\n      </a>\n    </li>\n  ");
-  ul.appendChild(div.firstElementChild);
-});
-container.appendChild(ul);
-container.appendChild(content);
+  container.innerHTML = "\n    <h1>".concat(newsContent.title, "</h1>\n\n    <div>\n      <a href=\"#\">\uBAA9\uB85D\uC73C\uB85C</a>\n    </div>\n  ");
+}
+function router() {
+  var routePath = location.hash;
+  if (routePath === "") {
+    newsFeed();
+  } else {
+    newsDetail();
+  }
+}
+window.addEventListener("hashchange", router);
+router();
 },{}],"../../../AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
