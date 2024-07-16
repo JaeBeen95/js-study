@@ -118,19 +118,36 @@ parcelRequire = (function (modules, cache, entry, globalName) {
 
   return newRequire;
 })({"app.js":[function(require,module,exports) {
+var container = document.getElementById("root");
 var ajax = new XMLHttpRequest();
+var content = document.createElement("div");
 var NEWS_URL = "https://api.hnpwa.com/v0/news/1.json";
+var CONTENT_URL = "https://api.hnpwa.com/v0/item/@id.json";
 ajax.open("GET", NEWS_URL, false);
 ajax.send();
 var newsFeed = JSON.parse(ajax.response);
 var ul = document.createElement("ul");
-newsFeed.map(function (item) {
+window.addEventListener("hashchange", function () {
+  var id = location.hash.substring(1);
+  ajax.open("GET", CONTENT_URL.replace("@id", id), false);
+  ajax.send();
+  var newsContent = JSON.parse(ajax.response);
+  var title = document.createElement("h1");
+  title.innerHTML = newsContent.title;
+  content.appendChild(title);
+});
+newsFeed.slice(0, 10).map(function (item) {
   var li = document.createElement("li");
-  li.innerHTML = item.title;
+  var a = document.createElement("a");
+  a.href = "#".concat(item.id);
+  a.innerHTML = "".concat(item.title, " (").concat(item.comments_count, ")");
+  a.addEventListener("click", function () {});
+  li.appendChild(a);
   ul.appendChild(li);
 });
-document.getElementById("root").appendChild(ul);
-},{}],"../../AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+container.appendChild(ul);
+container.appendChild(content);
+},{}],"../../../AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -155,7 +172,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "1193" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "7882" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];
@@ -299,5 +316,5 @@ function hmrAcceptRun(bundle, id) {
     return true;
   }
 }
-},{}]},{},["../../AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js","app.js"], null)
+},{}]},{},["../../../AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js","app.js"], null)
 //# sourceMappingURL=/app.c328ef1a.js.map
