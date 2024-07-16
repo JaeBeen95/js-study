@@ -24,16 +24,17 @@ window.addEventListener("hashchange", function () {
 });
 
 newsFeed.slice(0, 10).map((item) => {
-  const li = document.createElement("li");
-  const a = document.createElement("a");
+  const div = document.createElement("div");
 
-  a.href = `#${item.id}`;
-  a.innerHTML = `${item.title} (${item.comments_count})`;
+  div.innerHTML = `
+    <li>
+      <a href="#${item.id}">
+        ${item.title} (${item.comments_count})
+      </a>
+    </li>
+  `;
 
-  a.addEventListener("click", function () {});
-
-  li.appendChild(a);
-  ul.appendChild(li);
+  ul.appendChild(div.firstElementChild);
 });
 
 container.appendChild(ul);

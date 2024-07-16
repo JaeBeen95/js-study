@@ -137,13 +137,9 @@ window.addEventListener("hashchange", function () {
   content.appendChild(title);
 });
 newsFeed.slice(0, 10).map(function (item) {
-  var li = document.createElement("li");
-  var a = document.createElement("a");
-  a.href = "#".concat(item.id);
-  a.innerHTML = "".concat(item.title, " (").concat(item.comments_count, ")");
-  a.addEventListener("click", function () {});
-  li.appendChild(a);
-  ul.appendChild(li);
+  var div = document.createElement("div");
+  div.innerHTML = "\n    <li>\n      <a href=\"#".concat(item.id, "\">\n        ").concat(item.title, " (").concat(item.comments_count, ")\n      </a>\n    </li>\n  ");
+  ul.appendChild(div.firstElementChild);
 });
 container.appendChild(ul);
 container.appendChild(content);
