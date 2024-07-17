@@ -44,26 +44,26 @@ function newsFeed() {
 
   newsFeed
     .slice((store.currentPage - 1) * 10, store.currentPage * 10)
-    .map((item) => {
+    .forEach((news) => {
       newsList.push(`
-      <div class="p-6 bg-white mt-6 rounded-lg shadow-md transition-colors duration-500 hover:bg-green-100">
-        <div class="flex">
-          <div class="flex-auto">
-            <a href="#/show/${item.id}">${item.title}</a>  
+        <div class="p-6 bg-white mt-6 rounded-lg shadow-md transition-colors duration-500 hover:bg-green-100">
+          <div class="flex">
+            <div class="flex-auto">
+              <a href="#/show/${news.id}">${news.title}</a>  
+            </div>
+            <div class="text-center text-sm">
+              <div class="w-10 text-white bg-green-300 rounded-lg px-0 py-2">${news.comments_count}</div>
+            </div>
           </div>
-          <div class="text-center text-sm">
-            <div class="w-10 text-white bg-green-300 rounded-lg px-0 py-2">${item.comments_count}</div>
+          <div class="flex mt-3">
+            <div class="grid grid-cols-3 text-sm text-gray-500">
+              <div><i class="fas fa-user mr-1"></i>${news.user}</div>
+              <div><i class="fas fa-heart mr-1"></i>${news.points}</div>
+              <div><i class="far fa-clock mr-1"></i>${news.time_ago}</div>
+            </div>  
           </div>
-        </div>
-        <div class="flex mt-3">
-          <div class="grid grid-cols-3 text-sm text-gray-500">
-            <div><i class="fas fa-user mr-1"></i>${item.user}</div>
-            <div><i class="fas fa-heart mr-1"></i>${item.points}</div>
-            <div><i class="far fa-clock mr-1"></i>${item.time_ago}</div>
-          </div>  
-        </div>
-      </div>    
-    `);
+        </div>    
+      `);
     });
 
   const totalPages = Math.ceil(newsFeed.length / 10);
@@ -113,7 +113,32 @@ function newsDetail() {
     </div>
   `;
 
-  container.innerHTML = template;
+  function makeComment(comments, called = 0) {
+    const commentString = [];
+
+    comments.forEach((comments) => {
+      commentString.push(`
+        <div style="padding-left: ${called * 40}px;" class="mt-4">
+          <div class="text-gray-400">
+            <i class="fa fa-sort-up mr-2"></i>
+            <strong>${comments.user}</strong> ${comments.time_ago}
+          </div>
+          <p class="text-gray-700">${comments.content}</p>
+        </div>  
+      `);
+
+      if (comments.comments.length > 0) {
+        commentString.push(makeComment(comments.comments, called + 1));
+      }
+    });
+
+    return commentString.join("");
+  }
+
+  container.innerHTML = template.replace(
+    "{{__comments__}}",
+    makeComment(newsContent.comments)
+  );
 }
 
 function router() {
