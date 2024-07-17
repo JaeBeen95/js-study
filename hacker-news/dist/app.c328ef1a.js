@@ -134,14 +134,15 @@ function getData(url) {
 function newsFeed() {
   var newsFeed = getData(NEWS_URL);
   var newsList = [];
-  var totalPages = Math.ceil(newsFeed.length / 10);
-  newsList.push("<ul>");
+  var template = "\n    <div>\n      <h1>Hacker News</h1>\n      <ul>\n        {{__news_feed__}}\n      </ul>\n      <div>\n        <a href=\"#/page/{{__prev_page__}}\">\uC774\uC804 \uD398\uC774\uC9C0</a>\n        <a href=\"#/page/{{__next_page__}}\">\uB2E4\uC74C \uD398\uC774\uC9C0</a>\n      </div>\n    </div>\n  ";
   newsFeed.slice((store.currentPage - 1) * 10, store.currentPage * 10).map(function (item) {
     newsList.push("\n      <li>\n        <a href=\"#/show/".concat(item.id, "\">\n          ").concat(item.title, " (").concat(item.comments_count, ")\n        </a>\n      </li>\n    "));
   });
-  newsList.push("</ul>");
-  newsList.push("\n    <div>\n      <a href=\"#/page/".concat(store.currentPage > 1 ? store.currentPage - 1 : 1, "\">\uC774\uC804 \uD398\uC774\uC9C0</a>\n       <a href=\"#/page/").concat(store.currentPage < totalPages ? store.currentPage + 1 : totalPages, "\">\uB2E4\uC74C \uD398\uC774\uC9C0</a>\n    </div>\n    "));
-  container.innerHTML = newsList.join("");
+  var totalPages = Math.ceil(newsFeed.length / 10);
+  template = template.replace("{{__news_feed__}}", newsList.join(""));
+  template = template.replace("{{__prev_page__}}", store.currentPage > 1 ? store.currentPage - 1 : 1);
+  template = template.replace("{{__next_page__}}", store.currentPage < totalPages ? store.currentPage + 1 : totalPages);
+  container.innerHTML = template;
 }
 function newsDetail() {
   var id = location.hash.substring(7);
