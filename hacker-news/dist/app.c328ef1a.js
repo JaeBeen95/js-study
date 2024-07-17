@@ -134,9 +134,9 @@ function getData(url) {
 function newsFeed() {
   var newsFeed = getData(NEWS_URL);
   var newsList = [];
-  var template = "\n    <div>\n      <h1>Hacker News</h1>\n      <ul>\n        {{__news_feed__}}\n      </ul>\n      <div>\n        <a href=\"#/page/{{__prev_page__}}\">\uC774\uC804 \uD398\uC774\uC9C0</a>\n        <a href=\"#/page/{{__next_page__}}\">\uB2E4\uC74C \uD398\uC774\uC9C0</a>\n      </div>\n    </div>\n  ";
+  var template = "\n    <div class=\"bg-gray-600 min-h-screen\">\n      <div class=\"bg-white text-xl\">\n        <div class=\"mx-auto px-4\">\n          <div class=\"flex justify-between items-center py-6\">\n            <div class=\"flex justify-start\">\n              <h1 class=\"font-extrabold\">Hacker News</h1>\n            </div>\n            <div class=\"items-center justify-end\">\n              <a href=\"#/page/{{__prev_page__}}\" class=\"text-gray-500\">\n                Previous\n              </a>\n              <a href=\"#/page/{{__next_page__}}\" class=\"text-gray-500 ml-4\">\n                Next\n              </a>\n            </div>\n          </div> \n        </div>\n      </div>\n      <div class=\"p-4 text-2xl text-gray-700\">\n        {{__news_feed__}}        \n      </div>\n    </div>\n  ";
   newsFeed.slice((store.currentPage - 1) * 10, store.currentPage * 10).map(function (item) {
-    newsList.push("\n      <li>\n        <a href=\"#/show/".concat(item.id, "\">\n          ").concat(item.title, " (").concat(item.comments_count, ")\n        </a>\n      </li>\n    "));
+    newsList.push("\n      <div class=\"p-6 bg-white mt-6 rounded-lg shadow-md transition-colors duration-500 hover:bg-green-100\">\n        <div class=\"flex\">\n          <div class=\"flex-auto\">\n            <a href=\"#/show/".concat(item.id, "\">").concat(item.title, "</a>  \n          </div>\n          <div class=\"text-center text-sm\">\n            <div class=\"w-10 text-white bg-green-300 rounded-lg px-0 py-2\">").concat(item.comments_count, "</div>\n          </div>\n        </div>\n        <div class=\"flex mt-3\">\n          <div class=\"grid grid-cols-3 text-sm text-gray-500\">\n            <div><i class=\"fas fa-user mr-1\"></i>").concat(item.user, "</div>\n            <div><i class=\"fas fa-heart mr-1\"></i>").concat(item.points, "</div>\n            <div><i class=\"far fa-clock mr-1\"></i>").concat(item.time_ago, "</div>\n          </div>  \n        </div>\n      </div>    \n    "));
   });
   var totalPages = Math.ceil(newsFeed.length / 10);
   template = template.replace("{{__news_feed__}}", newsList.join(""));
@@ -147,7 +147,8 @@ function newsFeed() {
 function newsDetail() {
   var id = location.hash.substring(7);
   var newsContent = getData(CONTENT_URL.replace("@id", id));
-  container.innerHTML = "\n    <h1>".concat(newsContent.title, "</h1>\n\n    <div>\n      <a href=\"#/page/").concat(store.currentPage, "\">\uBAA9\uB85D\uC73C\uB85C</a>\n    </div>\n  ");
+  var template = "\n    <div class=\"bg-gray-600 min-h-screen pb-8\">\n      <div class=\"bg-white text-xl\">\n        <div class=\"mx-auto px-4\">\n          <div class=\"flex justify-between items-center py-6\">\n            <div class=\"flex justify-start\">\n              <h1 class=\"font-extrabold\">Hacker News</h1>\n            </div>\n            <div class=\"items-center justify-end\">\n              <a href=\"#/page/".concat(store.currentPage, "\" class=\"text-gray-500\">\n                <i class=\"fa fa-times\"></i>\n              </a>\n            </div>\n          </div>\n        </div>\n      </div>\n\n      <div class=\"h-full border rounded-xl bg-white m-6 p-4 \">\n        <h2>").concat(newsContent.title, "</h2>\n        <div class=\"text-gray-400 h-20\">\n          ").concat(newsContent.content, "\n        </div>\n\n        {{__comments__}}\n\n      </div>\n    </div>\n  ");
+  container.innerHTML = template;
 }
 function router() {
   var routePath = location.hash;
