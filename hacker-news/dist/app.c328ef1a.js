@@ -158,11 +158,11 @@ function newsDetail() {
   var id = location.hash.substring(7);
   var newsContent = getData(CONTENT_URL.replace("@id", id));
   var template = "\n    <div class=\"bg-gray-600 min-h-screen pb-8\">\n      <div class=\"bg-white text-xl\">\n        <div class=\"mx-auto px-4\">\n          <div class=\"flex justify-between items-center py-6\">\n            <div class=\"flex justify-start\">\n              <h1 class=\"font-extrabold\">Hacker News</h1>\n            </div>\n            <div class=\"items-center justify-end\">\n              <a href=\"#/page/".concat(store.currentPage, "\" class=\"text-gray-500\">\n                <i class=\"fa fa-times\"></i>\n              </a>\n            </div>\n          </div>\n        </div>\n      </div>\n\n      <div class=\"h-full border rounded-xl bg-white m-6 p-4 \">\n        <h2>").concat(newsContent.title, "</h2>\n        <div class=\"text-gray-400 h-20\">\n          ").concat(newsContent.content, "\n        </div>\n\n        {{__comments__}}\n\n      </div>\n    </div>\n  ");
-  for (var i = 0; i < store.feeds.length; i++) {
-    if (store.feeds[i].id === Number(id)) {
-      store.feeds[i].read = true;
-      break;
-    }
+  var feedToUpdate = store.feeds.find(function (feed) {
+    return feed.id === Number(id);
+  });
+  if (feedToUpdate) {
+    feedToUpdate.read = true;
   }
   function makeComment(comments) {
     var called = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;

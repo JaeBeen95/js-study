@@ -130,11 +130,9 @@ function newsDetail() {
     </div>
   `;
 
-  for (let i = 0; i < store.feeds.length; i++) {
-    if (store.feeds[i].id === Number(id)) {
-      store.feeds[i].read = true;
-      break;
-    }
+  const feedToUpdate = store.feeds.find((feed) => feed.id === Number(id));
+  if (feedToUpdate) {
+    feedToUpdate.read = true;
   }
 
   function makeComment(comments, called = 0) {
